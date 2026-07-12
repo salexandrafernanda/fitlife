@@ -1,0 +1,23 @@
+{
+  "name": "FitLife AI",
+  "short_name": "FitLife",
+  "description": "Nutrição, treino e evolução — tudo no seu aparelho.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0D0F",
+  "theme_color": "#0B0D0F",
+  "lang": "pt-BR",
+  "categories": ["health", "fitness", "lifestyle"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Registrar água", "short_name": "Água", "url": "./#water", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "Treino", "short_name": "Treino", "url": "./#train", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "Diário alimentar", "short_name": "Comida", "url": "./#food", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
+  ]
+}
