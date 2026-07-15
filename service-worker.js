@@ -1,14 +1,15 @@
-const VERSAO = 'fitlife-v1';
+/* FitLife AI — service worker */
+
+const VERSAO = 'fitlife-v3';
 const SHELL = [
 './',
 './index.html',
+'./manifest.json',
 './icon-192.png',
 './icon-512.png',
 './icon-maskable.png',
-'./apple-touch-icon.png',
-'./manifest.json'
+'./apple-touch-icon.png'
 ];
-const REDE_SEMPRE = ['api.anthropic.com', 'generativelanguage.googleapis.com'];
 
 self.addEventListener('install', e => {
 e.waitUntil(
@@ -29,11 +30,12 @@ caches.keys()
 self.addEventListener('fetch', e => {
 const req = e.request;
 if (req.method !== 'GET') return;
+
 const url = new URL(req.url);
 
-if (REDE_SEMPRE.some(d => url.hostname.includes(d))) return;
-
-if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
+if (url.hostname.includes('fonts.googleapis.com')
+|| url.hostname.includes('fonts.gstatic.com')
+|| url.hostname.includes('raw.githubusercontent.com')) {
 e.respondWith(
 caches.match(req).then(hit => hit || fetch(req).then(res => {
 const copia = res.clone();
