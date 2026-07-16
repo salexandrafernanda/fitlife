@@ -1,6 +1,11 @@
-/* FitLife AI — service worker */
+/* FitLife AI — service worker
+Estratégia:
+• App shell (HTML, ícones, manifest): cache-first, com atualização em segundo plano.
+• Fontes do Google: cache-first (ficam guardadas na primeira visita — depois abre offline).
+• Chamadas de IA (Anthropic / Gemini): NUNCA cacheadas. Passam direto pela rede.
+Trocar VERSAO a cada atualização do app força o cache novo. */
 
-const VERSAO = 'fitlife-v3';
+const VERSAO = 'fitlife-v4';
 const SHELL = [
 './',
 './index.html',
@@ -9,6 +14,12 @@ const SHELL = [
 './icon-512.png',
 './icon-maskable.png',
 './apple-touch-icon.png'
+];
+
+// Domínios que nunca podem ser servidos do cache
+const REDE_SEMPRE = [
+'api.anthropic.com',
+'generativelanguage.googleapis.com'
 ];
 
 self.addEventListener('install', e => {
@@ -33,8 +44,11 @@ if (req.method !== 'GET') return;
 
 const url = new URL(req.url);
 
-if (url.hostname.includes('fonts.googleapis.com')
-|| url.hostname.includes('fonts.gstatic.com')
+// IA: sempre rede, nunca cache
+if (REDE_SEMPRE.some(d => url.hostname.includes(d))) return;
+
+// Fontes do Google e imagens dos exercícios (Free Exercise DB): guarda na primeira visita
+if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')
 || url.hostname.includes('raw.githubusercontent.com')) {
 e.respondWith(
 caches.match(req).then(hit => hit || fetch(req).then(res => {
@@ -46,6 +60,7 @@ return res;
 return;
 }
 
+// Mesma origem: cache primeiro, mas atualiza em segundo plano
 if (url.origin === location.origin) {
 e.respondWith(
 caches.match(req).then(hit => {
@@ -56,12 +71,13 @@ caches.open(VERSAO).then(c => c.put(req, copia));
 }
 return res;
 }).catch(() => hit);
-return hit || rede;
+return hit || rede; // offline: devolve o que está guardado
 })
 );
 }
 });
 
+// Permite ao app pedir atualização imediata
 self.addEventListener('message', e => {
 if (e.data === 'atualizar') self.skipWaiting();
 });
