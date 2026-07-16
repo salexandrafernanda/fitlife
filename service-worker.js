@@ -5,7 +5,7 @@ Estratégia:
 • Chamadas de IA (Anthropic / Gemini): NUNCA cacheadas. Passam direto pela rede.
 Trocar VERSAO a cada atualização do app força o cache novo. */
 
-const VERSAO = 'fitlife-v4';
+const VERSAO = 'fitlife-v5';
 const SHELL = [
 './',
 './index.html',
